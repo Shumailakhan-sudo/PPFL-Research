@@ -1,0 +1,38 @@
+
+# File: image_preprocessing.py
+
+import torch
+from torchvision import transforms
+from torch.utils.data import DataLoader
+from torchvision.datasets import CIFAR10
+import matplotlib.pyplot as plt
+
+# Define the preprocessing transformations
+preprocess_transform = transforms.Compose([
+    transforms.Resize((64, 64)),        # Resize images to a fixed size
+    transforms.RandomHorizontalFlip(),  # Randomly flip images horizontally for data augmentation
+    transforms.ToTensor(),               # Convert images to PyTorch tensors
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize with mean and std
+])
+
+# Load the CIFAR-10 dataset (replace with your dataset loading logic)
+cifar_dataset = CIFAR10(root='./data', train=True, download=True, transform=preprocess_transform)
+
+# Example: Display an original and preprocessed image
+sample_idx = 0
+original_image, _ = cifar_dataset[sample_idx]
+preprocessed_image = preprocess_transform(original_image)
+
+# Plot original and preprocessed images side by side
+plt.figure(figsize=(8, 4))
+plt.subplot(1, 2, 1)
+plt.title('Original Image')
+plt.imshow(original_image.permute(1, 2, 0))  # Convert (C, H, W) to (H, W, C) for displaying with matplotlib
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.title('Preprocessed Image')
+plt.imshow(preprocessed_image.permute(1, 2, 0))
+plt.axis('off')
+
+plt.show()
